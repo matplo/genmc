@@ -44,8 +44,9 @@ def main():
 	log = Logger(log_file=args.logfile, level=logging.INFO, console=True)
 
 	# output
-	# Create a DataFrame to hold the event data
-	events = []
+	# Create lists to hold event-level and particle-level data
+	event_data = []
+	particle_data = []
 
  
 	pythia = Pythia8.Pythia()
@@ -78,16 +79,77 @@ def main():
 	pbar = tqdm.tqdm(total=nev)
 	while pbar.n < nev:
 		if not pythia.next():
-			break
-		# final_parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal()])
-		# Process the event - store only pT, eta, phi (with event and particle IDs)
-		_ = [events.append({
-				'event_id': pbar.n,
-				'particle_id': p.id(),
-				'pT': p.pT(),
-				'eta': p.eta(),
-				'phi': p.phi()
-			}) for p in pythia.event if p.isFinal() and abs(p.eta()) < args.etadet]
+			continue
+		
+		event_id = pbar.n
+		
+		# Collect event-level information (will be updated after particle loop)
+		event_info = {
+			'event_id': event_id,
+			'impact_parameter': pythia.info.hiInfo.b(),  # Impact parameter for heavy-ion collisions
+			'n_participants': pythia.info.hiInfo.nPartProj() + pythia.info.hiInfo.nPartTarg(),  # Number of participants
+			'n_collisions': pythia.info.hiInfo.nCollTot(),  # Total number of collisions
+		}
+		
+		# Collect particle-level information for this event
+		particles_in_event = []
+		# Variables for event-level calculations
+		sum_pT = 0.0
+		sum_eta = 0.0
+		sum_phi = 0.0
+		qx = 0.0  # x-component of Q-vector for event plane
+		qy = 0.0  # y-component of Q-vector for event plane
+		
+		for p in pythia.event:
+			if p.isFinal() and abs(p.eta()) < args.etadet:
+				pT = p.pT()
+				eta = p.eta()
+				phi = p.phi()
+				
+				particle_info = {
+					'event_id': event_id,
+					'particle_id': p.id(),
+					'pT': pT,
+					'eta': eta,
+					'phi': phi
+				}
+				particles_in_event.append(particle_info)
+				particle_data.append(particle_info)
+				
+				# Accumulate for event-level calculations
+				sum_pT += pT
+				sum_eta += eta
+				sum_phi += phi
+				
+				# Calculate Q-vector components (pT-weighted for better resolution)
+				qx += pT * math.cos(2.0 * phi)  # 2nd harmonic event plane
+				qy += pT * math.sin(2.0 * phi)
+		
+		n_particles = len(particles_in_event)
+		
+		# Calculate event-level quantities
+		if n_particles > 0:
+			mean_pT = sum_pT / n_particles
+			mean_eta = sum_eta / n_particles
+			mean_phi = sum_phi / n_particles
+			# Event plane angle (2nd harmonic)
+			event_plane_angle = 0.5 * math.atan2(qy, qx)
+		else:
+			mean_pT = 0.0
+			mean_eta = 0.0
+			mean_phi = 0.0
+			event_plane_angle = 0.0
+		
+		# Update event info with calculated quantities
+		event_info.update({
+			'n_particles': n_particles,
+			'mean_pT': mean_pT,
+			'mean_eta': mean_eta,
+			'mean_phi': mean_phi,
+			'event_plane_angle': event_plane_angle
+		})
+		event_data.append(event_info)
+		
 		pbar.update(1)
   
 	pbar.close()
@@ -95,10 +157,22 @@ def main():
 
 	pythia.stat()
 
-	df = pd.DataFrame(events)
-	df.to_parquet(args.output, engine="pyarrow")
+	# Create separate DataFrames for event-level and particle-level data
+	events_df = pd.DataFrame(event_data)
+	particles_df = pd.DataFrame(particle_data)
+	
+	# Save both DataFrames to separate parquet files
+	base_name = args.output.replace('.parquet', '')
+	events_file = f"{base_name}_events.parquet"
+	particles_file = f"{base_name}_particles.parquet"
+	
+	events_df.to_parquet(events_file, engine="pyarrow")
+	particles_df.to_parquet(particles_file, engine="pyarrow")
  
-	log.info(f"Data written to {args.output}")
+	log.info(f"Event data written to {events_file}")
+	log.info(f"Particle data written to {particles_file}")
+	log.info(f"Total events: {len(events_df)}")
+	log.info(f"Total particles: {len(particles_df)}")
 	
 if __name__ == '__main__':
 	main()
