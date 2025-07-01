@@ -80,14 +80,11 @@ def main():
 		if not pythia.next():
 			break
 		# final_parts = vector[fj.PseudoJet]([fj.PseudoJet(p.px(), p.py(), p.pz(), p.e()) for p in pythia.event if p.isFinal()])
-		# Process the event
+		# Process the event - store only pT, eta, phi (with event and particle IDs)
 		_ = [events.append({
 				'event_id': pbar.n,
 				'particle_id': p.id(),
-				'px': p.px(),
-				'py': p.py(),
-				'pz': p.pz(),
-				'e': p.e(),
+				'pT': p.pT(),
 				'eta': p.eta(),
 				'phi': p.phi()
 			}) for p in pythia.event if p.isFinal() and abs(p.eta()) < args.etadet]
