@@ -1,0 +1,11 @@
+jupyterlab
+ipykernel
+numpy
+pandas
+seaborn
+plotly
+matplotlib
+scipy
+scikit-learn
+tqdm
+arrow
