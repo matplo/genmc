@@ -1,0 +1,26 @@
+# Minimal PbPb Angantyr Configuration
+
+# Beam settings
+Beams:eCM = 5020
+Beams:idA = 1000822080
+Beams:idB = 1000822080
+
+# Enable Angantyr
+HeavyIon:mode = 1
+
+# Minimal processes for minimum bias
+SoftQCD:all = on
+HardQCD:all = off
+
+# Avoid fitting
+HeavyIon:SigFitNGen = 0
+
+# Basic settings
+Main:numberOfEvents = 100
+Random:setSeed = on
+Random:seed = 12345
+
+# Parton distribution functions (PDFs) for heavy nuclei
+# remember to run lhapdf install EPPS21nlo_CT18Anlo_Pb208
+PDF:pSet = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208  # nPDF for Pb beam A
+# PDF:pSetB = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208  # nPDF for Pb beam B

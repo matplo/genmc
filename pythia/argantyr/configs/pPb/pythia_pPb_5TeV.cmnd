@@ -1,0 +1,59 @@
+# Proton-Lead (pPb) Collision 
+
+# for pPb collisions
+# sqrt(s_NN) = sqrt(Z1*Z2 / A1 / A2) * E_p
+# Z for Pb is 82
+# https://inspirehep.net/literature/1469938
+
+# Beam settings for asymmetric collisions
+Beams:idA = 2212              # Beam A is a proton (p) with PDG ID 2212
+Beams:eA = 4000.0            # Proton beam energy for pPb collisions at 5.02 TeV
+#Beams:eA = 6370.0            # Proton beam energy for pPb collisions at 8 TeV
+
+# Beams:idB = 1000822080        # Beam B is lead (Pb) with 208 nucleons
+Beams:idB = 2212        # Beam B
+Beams:eB = 1577.0             # B part beam energy for pPb collisions at 5.02 TeV
+#Beams:eB = 2510.0             # B part beam energy for pPb collisions at 8 TeV
+
+# Center-of-mass frame setup for asymmetric energies
+Beams:frameType = 2           # Asymmetric lab frame with unequal beam energies
+
+# Physics process selection
+HardQCD:all = on              # Enable hard QCD processes (gg -> gg, qg -> qg, etc.)
+
+# Set a minimum transverse momentum cut (pThatMin)
+PhaseSpace:pThatMin = 20.0    # Minimum transverse momentum for hard subprocesses (in GeV)
+
+# Parton distribution functions (PDFs)
+PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust based on your available PDF sets)
+# Set the PDF for beam A (proton)
+# PDF:beamA = LHAPDF6:CT14nlo
+# Set the nPDF for beam B (lead)
+# PDF:pSetB = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208
+
+# Optional: Enable soft QCD processes as well
+# SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+SoftQCD:all = off							# Disable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+
+# Multiparton interactions (MPI)
+MultipartonInteractions:ecmPow = 0.03344  # MPI settings for pPb collisions
+MultipartonInteractions:pT0Ref = 2.15     # Reference pT0 for MPI at LHC energies
+
+# Hadronization model
+HadronLevel:all = on          # Turn on hadronization (final state particle generation)
+
+# Initial state radiation (ISR) and final state radiation (FSR)
+PartonLevel:ISR = on          # Enable initial-state radiation
+PartonLevel:FSR = on          # Enable final-state radiation
+
+# Optional: Output control for debugging or analysis
+# Next:numberShowEvent = 0   # Show information for the first 10 events
+# Next:numberShowProcess = 0  # Show detailed process information for 1 event
+# Next:numberShowInfo = 0     # Show general event information for 1 event
+
+# Number of events to generate
+Main:numberOfEvents = 1000000   # Generate 10,000 events (adjust as needed)
+
+# Random number seed (useful for reproducibility)
+Random:setSeed = on
+Random:seed = 12345           # Set a specific seed for reproducibility (optional)

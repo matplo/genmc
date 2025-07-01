@@ -1,0 +1,24 @@
+# Test 1: Add PDF settings to minimal config
+
+# Beam settings
+Beams:eCM = 5020
+Beams:idA = 1000822080
+Beams:idB = 1000822080
+
+# Enable Angantyr
+HeavyIon:mode = 1
+
+# Add PDF settings
+PDF:pSet = LHAPDF6:CT14nlo
+
+# Minimal processes
+SoftQCD:all = on
+HardQCD:all = off
+
+# Avoid fitting
+HeavyIon:SigFitNGen = 0
+
+# Basic settings
+Main:numberOfEvents = 10
+Random:setSeed = on
+Random:seed = 12345
