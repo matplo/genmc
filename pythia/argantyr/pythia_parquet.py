@@ -111,7 +111,8 @@ def main():
 					'particle_id': p.id(),
 					'pT': pT,
 					'eta': eta,
-					'phi': phi
+					'phi': phi,
+					'charge': p.charge()
 				}
 				particles_in_event.append(particle_info)
 				particle_data.append(particle_info)
@@ -146,7 +147,9 @@ def main():
 			'mean_pT': mean_pT,
 			'mean_eta': mean_eta,
 			'mean_phi': mean_phi,
-			'event_plane_angle': event_plane_angle
+			'event_plane_angle': event_plane_angle,
+			'qx' : qx,
+			'qy' : qy
 		})
 		event_data.append(event_info)
 		
