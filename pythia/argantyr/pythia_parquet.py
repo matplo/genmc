@@ -97,14 +97,14 @@ def main():
 			'hi_weightSum': _pythia_info.hiInfo.weightSum(),
    
 			# from pythia 8.315 - also better to store post gen
-			# 'hi_glauber_tot': _pythia_info.hiInfo.glauberTot(),  # Glauber total
-			# 'hi_glauber_tot_err': _pythia_info.hiInfo.glauberTotErr(),  # Glauber total
-			# 'hi_glauber_nd': _pythia_info.hiInfo.glauberND(),  # Glauber ND
-			# 'hi_glauber_nd_err': _pythia_info.hiInfo.glauberNDErr(),  # Glauber ND error	
-			# 'hi_glauber_inel': _pythia_info.hiInfo.glauberINEL(),  # Glauber INEL
-			# 'hi_glauber_inel_err': _pythia_info.hiInfo.glauberINELErr(),  # Glauber INEL error
-			# 'hi_glauber_el': _pythia_info.hiInfo.glauberEL(),  # Glauber EL
-			# 'hi_glauber_el_err': _pythia_info.hiInfo.glauberELErr(),  # Glauber EL error
+			'hi_glauber_tot': _pythia_info.hiInfo.glauberTot(),  # Glauber total
+			'hi_glauber_tot_err': _pythia_info.hiInfo.glauberTotErr(),  # Glauber total
+			'hi_glauber_nd': _pythia_info.hiInfo.glauberND(),  # Glauber ND
+			'hi_glauber_nd_err': _pythia_info.hiInfo.glauberNDErr(),  # Glauber ND error	
+			'hi_glauber_inel': _pythia_info.hiInfo.glauberINEL(),  # Glauber INEL
+			'hi_glauber_inel_err': _pythia_info.hiInfo.glauberINELErr(),  # Glauber INEL error
+			'hi_glauber_el': _pythia_info.hiInfo.glauberEL(),  # Glauber EL
+			'hi_glauber_el_err': _pythia_info.hiInfo.glauberELErr(),  # Glauber EL error
 
 			'sigma_gen': _pythia_info.sigmaGen(),  # Inelastic cross-section
 			'sigma_gen_err': _pythia_info.sigmaErr(),	# Total cross-section
