@@ -38,6 +38,7 @@ def main():
 	parser.add_argument('--nev', help='number of events to generate (overrides config file)', default=None, type=int)
 	parser.add_argument('--cmnd', help='pythia command file', default='pythia.cmnd', type=str)
 	parser.add_argument('--logfile', help='log file name', default=None, type=str)
+	parser.add_argument('--seed', help='random seed', default=None, type=int)
 
 	args = parser.parse_args()
 
@@ -52,6 +53,10 @@ def main():
 	pythia = Pythia8.Pythia()
 	log.info("Reading configuration file:", args.cmnd)
 	pythia.readFile(args.cmnd)
+	if args.seed is not None:
+		log.info(f"Setting random seed: {args.seed}")
+		pythia.readString(f"Random:setSeed = on")
+		pythia.readString(f"Random:seed = {args.seed}")
 	log.info("Initializing PYTHIA...")
 	if not pythia.init():
 		log.error("[e] pythia initialization failed.")
