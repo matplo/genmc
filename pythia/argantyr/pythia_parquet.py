@@ -93,10 +93,10 @@ def main():
 			'event_id': event_id,
 
 			'impact_parameter': _pythia_info.hiInfo.b(),  # Impact parameter for heavy-ion collisions
-			'n_partproj': _pythia_info.hiInfo.nPartProj(),  # Number of participants
- 			'n_parttarg': _pythia_info.hiInfo.nPartTarg(),  # Number of participants
-			'n_participants': _pythia_info.hiInfo.nPartProj() + _pythia_info.hiInfo.nPartTarg(),  # Number of participants
-			'n_collisions': _pythia_info.hiInfo.nCollTot(),  # Total number of collisions
+			'n_part_proj': _pythia_info.hiInfo.nPartProj(),  # Number of participants
+ 			'n_part_targ': _pythia_info.hiInfo.nPartTarg(),  # Number of participants
+			'n_part': _pythia_info.hiInfo.nPartProj() + _pythia_info.hiInfo.nPartTarg(),  # Number of participants
+			'n_coll': _pythia_info.hiInfo.nCollTot(),  # Total number of collisions
 
 			'hi_weight': _pythia_info.hiInfo.weight(),
 			'hi_weightSum': _pythia_info.hiInfo.weightSum(),

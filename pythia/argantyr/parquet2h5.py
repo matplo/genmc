@@ -69,8 +69,7 @@ try:
             particles_array = np.column_stack([
                 eta_centered.astype(np.float16),
                 phi_rel.astype(np.float16),
-                pT_rel.astype(np.float16),
-                phi_rel.astype(np.float16),  # Note: phi_rel appears twice in original
+                pT_rel.astype(np.float16)
             ])
             
             # Create jet/event features array
@@ -112,7 +111,7 @@ try:
             # Add metadata
             h5f.attrs['n_events'] = len(particle_data)
             h5f.attrs['max_particles'] = max_particles
-            h5f.attrs['particle_features'] = ['eta_centered', 'phi_rel', 'pT_rel', 'phi_rel']
+            h5f.attrs['particle_features'] = ['eta_centered', 'phi_rel', 'pT_rel']
             h5f.attrs['jet_features'] = ['e_pT', 'Qx', 'Qy', 'eta_jet', 'centrality', 'n_particles']
         
         print("HDF5 file created successfully!")
