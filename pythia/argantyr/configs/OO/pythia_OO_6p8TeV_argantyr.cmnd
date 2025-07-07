@@ -1,0 +1,66 @@
+# Oxygen-Oxygen (OO) Minimum Bias Collisions using Angantyr
+
+# OO collisions at with E_p rigitiy for 6.799TeV
+# Using the Angantyr model for heavy-ion collisions
+# Reference: https://arxiv.org/abs/1806.10820
+# beam set for Ep = 6800GeV
+# EO = Z/A * Ep = 3400
+# sqrt(sNN) = sqrt( mp^2 + m^2O + 2(Ep*EO + pp*pN) )
+# Beam settings for symmetric OO collisions
+Beams:eCM = 6800              # sqrt(s_NN) = 6.8 TeV
+Beams:idA = 1000080160        # Beam A is oxygen (O-16) with 16 nucleons  
+Beams:idB = 1000080160        # Beam B is oxygen (O-16) with 16 nucleons
+
+# Enable Angantyr model for heavy-ion collisions
+HeavyIon:mode = 1             # Enable Angantyr heavy-ion model
+
+# Angantyr-specific settings for OO collisions
+Angantyr:CollisionModel = 1   # Use Glauber model for nuclear overlap
+# Angantyr:impactMode = 3       # Sample impact parameter for minimum bias (0-20 fm typical)
+# Angantyr:impactMax = 20.0     # Maximum impact parameter in fm
+# HeavyIon:SigFitErr = 0.02,0.02,0.1,0.05,0.05,0.0,0.1,0.0  # Error handling for fits
+
+# Physics process selection for minimum bias
+SoftQCD:all = on              # Enable all soft QCD processes for minimum bias
+HardQCD:all = off             # Disable hard QCD for pure minimum bias with Angantyr
+
+# No pThat cut for minimum bias events
+# PhaseSpace:pThatMin = 2.0     # Not used for minimum bias
+
+# Parton distribution functions (PDFs) for heavy nuclei
+# PDF:pSet = LHAPDF6:CT14nlo    # Use CT14nlo PDF set for both beams
+# For nuclear PDFs, you could use (if available):
+# remember to run lhapdf install EPPS21nlo_CT18Anlo_Pb208
+# PDF:pSet = LHAPDF6:EPPS21nlo_CT18Anlo_Pb208  # nPDF for both beams
+PDF:pSet = LHAPDF6:EPPS21nlo_CT18Anlo_O16
+# PDF:pSet = LHAPDF6:nNNPDF20_nlo_as_0118_O16
+
+# Multiparton interactions (MPI) for PbPb - use defaults for now
+# MultipartonInteractions:ecmPow = 0.03344  # MPI energy dependence
+# MultipartonInteractions:pT0Ref = 2.15     # Reference pT0 for MPI
+# MultipartonInteractions:bProfile = 4      # Impact parameter profile for heavy ions
+
+# Hadronization model
+HadronLevel:all = on          # Turn on hadronization (final state particle generation)
+
+# Optional: Output control for debugging or analysis
+# Next:numberShowEvent = 0   # Show information for the first 10 events
+# Next:numberShowProcess = 0  # Show detailed process information for 1 event
+# Next:numberShowInfo = 0     # Show general event information for 1 event
+
+# Number of events to generate  
+Main:numberOfEvents = 10000   # Generate 10,000 minimum bias events (adjust as needed)
+
+# Random number seed (useful for reproducibility)
+Random:setSeed = on
+Random:seed = 12345           # Set a specific seed for reproducibility (optional)
+
+# To avoid refitting, add the following lines to your configuration file: 
+HeavyIon:SigFitNGen = 0
+HeavyIon:SigFitDefPar = 26.06,1.98,0.50
+
+# Explicitly ensure parton-level processes are enabled (override command-line args)
+# PartonLevel:all = on          # Enable all parton-level processes
+# PartonLevel:ISR = on          # Enable initial-state radiation  
+# PartonLevel:FSR = on          # Enable final-state radiation
+# PartonLevel:MPI = on          # Enable multiparton interactions

@@ -80,15 +80,36 @@ def main():
 	while pbar.n < nev:
 		if not pythia.next():
 			continue
-		
+
 		event_id = pbar.n
-		
+		_pythia_info = Pythia8.getInfo(pythia)
 		# Collect event-level information (will be updated after particle loop)
 		event_info = {
 			'event_id': event_id,
-			'impact_parameter': pythia.info.hiInfo.b(),  # Impact parameter for heavy-ion collisions
-			'n_participants': pythia.info.hiInfo.nPartProj() + pythia.info.hiInfo.nPartTarg(),  # Number of participants
-			'n_collisions': pythia.info.hiInfo.nCollTot(),  # Total number of collisions
+
+			'impact_parameter': _pythia_info.hiInfo.b(),  # Impact parameter for heavy-ion collisions
+			'n_partproj': _pythia_info.hiInfo.nPartProj(),  # Number of participants
+ 			'n_parttarg': _pythia_info.hiInfo.nPartTarg(),  # Number of participants
+			'n_participants': _pythia_info.hiInfo.nPartProj() + _pythia_info.hiInfo.nPartTarg(),  # Number of participants
+			'n_collisions': _pythia_info.hiInfo.nCollTot(),  # Total number of collisions
+
+			'hi_weight': _pythia_info.hiInfo.weight(),
+			'hi_weightSum': _pythia_info.hiInfo.weightSum(),
+   
+			# from pythia 8.315 - also better to store post gen
+			# 'hi_glauber_tot': _pythia_info.hiInfo.glauberTot(),  # Glauber total
+			# 'hi_glauber_tot_err': _pythia_info.hiInfo.glauberTotErr(),  # Glauber total
+			# 'hi_glauber_nd': _pythia_info.hiInfo.glauberND(),  # Glauber ND
+			# 'hi_glauber_nd_err': _pythia_info.hiInfo.glauberNDErr(),  # Glauber ND error	
+			# 'hi_glauber_inel': _pythia_info.hiInfo.glauberINEL(),  # Glauber INEL
+			# 'hi_glauber_inel_err': _pythia_info.hiInfo.glauberINELErr(),  # Glauber INEL error
+			# 'hi_glauber_el': _pythia_info.hiInfo.glauberEL(),  # Glauber EL
+			# 'hi_glauber_el_err': _pythia_info.hiInfo.glauberELErr(),  # Glauber EL error
+
+			'sigma_gen': _pythia_info.sigmaGen(),  # Inelastic cross-section
+			'sigma_gen_err': _pythia_info.sigmaErr(),	# Total cross-section
+			'weight': _pythia_info.weight(),
+			'weightSum': _pythia_info.weightSum()
 		}
 		
 		# Collect particle-level information for this event

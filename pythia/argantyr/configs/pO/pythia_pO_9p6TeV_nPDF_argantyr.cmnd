@@ -1,0 +1,67 @@
+# Proton-Oxygen (pO) Collision 
+
+# for pO collisions
+# sqrt(s_NN) = sqrt(Z1*Z2 / A1 / A2) * E_p (*2)
+# s_{NN} = m_p^2 + m_N^2 + 2(E_p * E_N + p_p * p_N)
+# Z for O is 8
+# https://inspirehep.net/literature/1469938
+# beam set for Ep = 6800GeV
+# EO = Z/A * Ep = 3400
+# sqrt(sNN) = sqrt( mp^2 + m^2O + 2(Ep*EO + pp*pN) )
+# Beam settings for symmetric OO collisions
+
+# Beam settings for asymmetric collisions
+Beams:idA = 2212              # Beam A is a proton (p) with PDG ID 2212
+Beams:eA = 6800.0             # Proton beam energy for pO collisions at 4.8 TeV
+
+Beams:idB = 1000080160        # Beam B is oxygen (O-16) with 16 nucleons
+# Beams:idB = 2212        # Beam B
+Beams:eB = 3400.0             # O part beam energy for pO collisions at 4.8 TeV
+
+# Center-of-mass frame setup for asymmetric energies
+Beams:frameType = 2           # Asymmetric lab frame with unequal beam energies
+
+# Physics process selection
+HardQCD:all = on              # Enable hard QCD processes (gg -> gg, qg -> qg, etc.)
+
+# Set a minimum transverse momentum cut (pThatMin)
+PhaseSpace:pThatMin = 20.0    # Minimum transverse momentum for hard subprocesses (in GeV)
+
+# Parton distribution functions (PDFs)
+PDF:pSet = LHAPDF6:CT14nlo    # Use the CT14nlo PDF set from LHAPDF (adjust based on your available PDF sets)
+# Set the PDF for beam A (proton)
+# PDF:beamA = LHAPDF6:CT14nlo
+# Set the nPDF for beam B (oxygen)
+PDF:pSetB = LHAPDF6:EPPS21nlo_CT18Anlo_O16
+# PDF:pSetB = LHAPDF6:nNNPDF20_nlo_as_0118_O16
+
+# Optional: Enable soft QCD processes as well
+# SoftQCD:all = on              # Enable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+SoftQCD:all = off							# Disable soft QCD processes (non-diffractive, elastic, single- and double-diffractive)
+
+# Multiparton interactions (MPI)
+MultipartonInteractions:ecmPow = 0.03344  # MPI settings for pO collisions
+MultipartonInteractions:pT0Ref = 2.15     # Reference pT0 for MPI at LHC energies
+
+# Hadronization model
+HadronLevel:all = on          # Turn on hadronization (final state particle generation)
+
+# Initial state radiation (ISR) and final state radiation (FSR)
+PartonLevel:ISR = on          # Enable initial-state radiation
+PartonLevel:FSR = on          # Enable final-state radiation
+
+# Optional: Output control for debugging or analysis
+# Next:numberShowEvent = 0   # Show information for the first 10 events
+# Next:numberShowProcess = 0  # Show detailed process information for 1 event
+# Next:numberShowInfo = 0     # Show general event information for 1 event
+
+# Number of events to generate
+Main:numberOfEvents = 1000000   # Generate 10,000 events (adjust as needed)
+
+# Random number seed (useful for reproducibility)
+Random:setSeed = on
+Random:seed = 12345           # Set a specific seed for reproducibility (optional)
+
+# To avoid refitting, add the following lines to your configuration file: 
+HeavyIon:SigFitNGen = 0
+HeavyIon:SigFitDefPar = 26.06,1.98,0.50
