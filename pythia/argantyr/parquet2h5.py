@@ -64,7 +64,7 @@ try:
             # Simple Q vector computation (adjust based on your needs)
             Qx = np.sum(pt * np.cos(phi))
             Qy = np.sum(pt * np.sin(phi))
-            
+            ep_angle = np.arctan2(Qy, Qx)  # Angle of the Q vector
             # Create particle features array
             particles_array = np.column_stack([
                 eta_centered.astype(np.float16),
@@ -75,7 +75,7 @@ try:
             # Create jet/event features array
             # Assuming centrality exists in events_df, otherwise set to 0
             centrality = event_row.get('centrality', 0) if 'centrality' in events_df.columns else 0
-            jet_array = [e_pT, Qx, Qy, eta_jet, centrality, len(event_particles)]
+            jet_array = [e_pT, Qx, Qy, eta_jet, centrality, len(event_particles), ep_angle]
             
             particle_data.append(particles_array)
             jet_data.append(jet_array)
@@ -112,8 +112,8 @@ try:
             h5f.attrs['n_events'] = len(particle_data)
             h5f.attrs['max_particles'] = max_particles
             h5f.attrs['particle_features'] = ['eta_centered', 'phi_rel', 'pT_rel']
-            h5f.attrs['jet_features'] = ['e_pT', 'Qx', 'Qy', 'eta_jet', 'centrality', 'n_particles']
-        
+            h5f.attrs['jet_features'] = ['e_pT', 'Qx', 'Qy', 'eta_jet', 'centrality', 'n_particles', 'ep_angle']
+
         print("HDF5 file created successfully!")
         print(f"Particle dataset shape: {particles_padded.shape}")
         print(f"Jet dataset shape: {jet_data_array.shape}")

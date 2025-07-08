@@ -34,7 +34,7 @@ def main():
 	# pyconf.add_standard_pythia_args(parser)
 	parser.add_argument('-v', '--verbose', help="be verbose", default=False, action='store_true')
 	parser.add_argument('-o','--output', help='root output filename', default='pythia_run_output.parquet', type=str)
-	parser.add_argument('--etadet', help='detector eta', default=1.0, type=float)
+	parser.add_argument('--etadet', help='detector eta', default=2.0, type=float)
 	parser.add_argument('--nev', help='number of events to generate (overrides config file)', default=None, type=int)
 	parser.add_argument('--cmnd', help='pythia command file', default='pythia.cmnd', type=str)
 	parser.add_argument('--logfile', help='log file name', default=None, type=str)
