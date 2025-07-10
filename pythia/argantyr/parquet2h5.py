@@ -60,22 +60,34 @@ try:
             pT_rel = np.log(pt / e_pT)
             eta_centered = eta - eta_jet
             phi_rel = phi - np.mean(phi)
+            eta_rel = eta - eta_jet
             
-            # Simple Q vector computation (adjust based on your needs)
-            Qx = np.sum(pt * np.cos(phi))
-            Qy = np.sum(pt * np.sin(phi))
-            ep_angle = np.arctan2(Qy, Qx)  # Angle of the Q vector
+            # Simple Q vector computation (adjust based on your needs) - we will use calculated values from parquet file
+            # Qx = np.sum(pt * np.cos(phi))
+            # Qy = np.sum(pt * np.sin(phi))
+            # ep_angle = np.arctan2(Qy, Qx)  # Angle of the Q vector
             # Create particle features array
             particles_array = np.column_stack([
                 eta_centered.astype(np.float16),
                 phi_rel.astype(np.float16),
-                pT_rel.astype(np.float16)
+                pT_rel.astype(np.float16),
+                eta_rel.astype(np.float16),
+                pt.astype(np.float16),
+                eta.astype(np.float16),
+                phi.astype(np.float16)
             ])
             
             # Create jet/event features array
             # Assuming centrality exists in events_df, otherwise set to 0
-            centrality = event_row.get('centrality', 0) if 'centrality' in events_df.columns else 0
-            jet_array = [e_pT, Qx, Qy, eta_jet, centrality, len(event_particles), ep_angle]
+            # centrality = event_row.get('centrality', 0) if 'centrality' in events_df.columns else 0
+            centrality = event_row.get('n_particles', 0) if 'n_particles' in events_df.columns else 0
+            imp_par = event_row.get('impact_parameter', 0) if 'impact_parameter' in events_df.columns else 0
+            n_coll = event_row.get('n_coll', 0) if 'n_coll' in events_df.columns else 0
+            n_part = event_row.get('n_part', 0) if 'n_part' in events_df.columns else 0
+            ep_angle = event_row.get('event_plane_angle', 0) if 'event_plane_angle' in events_df.columns else 0
+            Qx = event_row.get('qx', 0) if 'qx' in events_df.columns else 0
+            Qy = event_row.get('qy', 0) if 'qy' in events_df.columns else 0
+            jet_array = [e_pT, Qx, Qy, eta_jet, centrality, len(event_particles), ep_angle, imp_par, n_coll, n_part]
             
             particle_data.append(particles_array)
             jet_data.append(jet_array)
@@ -111,8 +123,8 @@ try:
             # Add metadata
             h5f.attrs['n_events'] = len(particle_data)
             h5f.attrs['max_particles'] = max_particles
-            h5f.attrs['particle_features'] = ['eta_centered', 'phi_rel', 'pT_rel']
-            h5f.attrs['jet_features'] = ['e_pT', 'Qx', 'Qy', 'eta_jet', 'centrality', 'n_particles', 'ep_angle']
+            h5f.attrs['particle_features'] = ['eta_centered', 'phi_rel', 'pT_rel', 'eta_rel', 'pT', 'eta', 'phi']
+            h5f.attrs['jet_features'] = ['e_pT', 'Qx', 'Qy', 'eta_jet', 'centrality', 'n_particles', 'ep_angle', 'b', 'n_coll', 'n_part']
 
         print("HDF5 file created successfully!")
         print(f"Particle dataset shape: {particles_padded.shape}")
