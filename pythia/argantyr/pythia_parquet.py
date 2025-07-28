@@ -49,9 +49,9 @@ def main():
 	event_data = []
 	particle_data = []
 
- 
+
 	pythia = Pythia8.Pythia()
-	log.info("Reading configuration file:", args.cmnd)
+	log.info(f"Reading configuration file: {args.cmnd}")
 	pythia.readFile(args.cmnd)
 	if args.seed is not None:
 		log.info(f"Setting random seed: {args.seed}")
@@ -75,7 +75,7 @@ def main():
 		# Use value from config file
 		nev = pythia.mode("Main:numberOfEvents")
 		log.info(f"Using config file event count: {nev}")
-	
+
 	if nev < 10:
 		nev = 10
 		log.info(f"Minimum event count enforced: {nev}")
@@ -100,12 +100,12 @@ def main():
 
 			'hi_weight': _pythia_info.hiInfo.weight(),
 			'hi_weightSum': _pythia_info.hiInfo.weightSum(),
-   
+
 			# from pythia 8.315 - also better to store post gen
 			'hi_glauber_tot': _pythia_info.hiInfo.glauberTot(),  # Glauber total
 			'hi_glauber_tot_err': _pythia_info.hiInfo.glauberTotErr(),  # Glauber total
 			'hi_glauber_nd': _pythia_info.hiInfo.glauberND(),  # Glauber ND
-			'hi_glauber_nd_err': _pythia_info.hiInfo.glauberNDErr(),  # Glauber ND error	
+			'hi_glauber_nd_err': _pythia_info.hiInfo.glauberNDErr(),  # Glauber ND error
 			'hi_glauber_inel': _pythia_info.hiInfo.glauberINEL(),  # Glauber INEL
 			'hi_glauber_inel_err': _pythia_info.hiInfo.glauberINELErr(),  # Glauber INEL error
 			'hi_glauber_el': _pythia_info.hiInfo.glauberEL(),  # Glauber EL
@@ -116,7 +116,7 @@ def main():
 			'weight': _pythia_info.weight(),
 			'weightSum': _pythia_info.weightSum()
 		}
-		
+
 		# Collect particle-level information for this event
 		particles_in_event = []
 		# Variables for event-level calculations
@@ -125,13 +125,13 @@ def main():
 		sum_phi = 0.0
 		qx = 0.0  # x-component of Q-vector for event plane
 		qy = 0.0  # y-component of Q-vector for event plane
-		
+
 		for p in pythia.event:
 			if p.isFinal() and abs(p.eta()) < args.etadet:
 				pT = p.pT()
 				eta = p.eta()
 				phi = p.phi()
-				
+
 				particle_info = {
 					'event_id': event_id,
 					'particle_id': p.id(),
@@ -142,18 +142,18 @@ def main():
 				}
 				particles_in_event.append(particle_info)
 				particle_data.append(particle_info)
-				
+
 				# Accumulate for event-level calculations
 				sum_pT += pT
 				sum_eta += eta
 				sum_phi += phi
-				
+
 				# Calculate Q-vector components (pT-weighted for better resolution)
 				qx += pT * math.cos(2.0 * phi)  # 2nd harmonic event plane
 				qy += pT * math.sin(2.0 * phi)
-		
+
 		n_particles = len(particles_in_event)
-		
+
 		# Calculate event-level quantities
 		if n_particles > 0:
 			mean_pT = sum_pT / n_particles
@@ -166,7 +166,7 @@ def main():
 			mean_eta = 0.0
 			mean_phi = 0.0
 			event_plane_angle = 0.0
-		
+
 		# Update event info with calculated quantities
 		event_info.update({
 			'n_particles': n_particles,
@@ -178,9 +178,9 @@ def main():
 			'qy' : qy
 		})
 		event_data.append(event_info)
-		
+
 		pbar.update(1)
-  
+
 	pbar.close()
 	log.info("Event generation completed.")
 
@@ -189,19 +189,19 @@ def main():
 	# Create separate DataFrames for event-level and particle-level data
 	events_df = pd.DataFrame(event_data)
 	particles_df = pd.DataFrame(particle_data)
-	
+
 	# Save both DataFrames to separate parquet files
 	base_name = args.output.replace('.parquet', '')
 	events_file = f"{base_name}_events.parquet"
 	particles_file = f"{base_name}_particles.parquet"
-	
+
 	events_df.to_parquet(events_file, engine="pyarrow")
 	particles_df.to_parquet(particles_file, engine="pyarrow")
- 
+
 	log.info(f"Event data written to {events_file}")
 	log.info(f"Particle data written to {particles_file}")
 	log.info(f"Total events: {len(events_df)}")
 	log.info(f"Total particles: {len(particles_df)}")
-	
+
 if __name__ == '__main__':
 	main()
